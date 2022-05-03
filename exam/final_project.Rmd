@@ -1,0 +1,60 @@
+---
+title: "Map of Happiness"
+Authors: "Laura Louise Rokkjær and Sofie Lloyd Thomsen"
+output: html_document
+---
+
+```{r setup and loading packages}
+# Setup
+knitr::opts_chunk$set(echo = TRUE)
+
+# Loading relevant packages 
+install.packages("leaflet")
+install.packages("tmap")
+install.packages("tidyverse")
+install.packages("raster")
+install.packages("spDataLarge")
+install.packages("dplyr")
+install.packages("rnaturalearth") #Vector maps of the world ‘Natural Earth’
+
+
+# Activating libraries 
+library(rgdal)
+library(raster)
+library(sp)
+library(leaflet)
+library(dplyr)
+library(rnaturalearth)
+library(readr)
+library(tmap)
+
+
+```
+
+Loading the data from https://worldhappiness.report/ed/2021/#appendices-and-data:
+```{r load data}
+happy_world <- read_csv("hapiscore_whr.csv")
+
+```
+
+## Plot the world map
+
+```{r world map}
+data("World")
+tmap::tmap_mode("view")
+
+library(tmap)
+
+mapWorld <- tm_shape(World) +
+    tm_polygons("HPI", palette="-Blues", contrast=.9, id="name", title="HPI - Happiness Index ") + 
+    tm_layout(title = "Map of Happiness") + 
+    tm_compass(position = c("left", "bottom")) +
+    tm_markers(
+      shape = marker_icon(),
+      clustering = TRUE,
+      text.just = "top")
+mapWorld
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
